@@ -8,25 +8,32 @@ import androidx.room.Update
 import com.example.ucp2.data.entity.Jadwal
 import kotlinx.coroutines.flow.Flow
 
+
 @Dao
 interface JadwalDao {
 
-    //fungsi get all data
-    @Query("SELECT * FROM jadwal ORDER BY namadokter ASC")
-    fun getAllMahasiswa() : Flow<List<Jadwal>>
+    @Query("SELECT * FROM jadwal ORDER BY namaPasien ")
+    fun getALLJadwal() : Flow<List<Jadwal>>
 
-    // get Mahasiswa
-    @Query("SELECT * FROM jadwal WHERE id = :id")  //mengambil data mahasiswa berdasarkan NIM
-    fun getMahasiswa(nim: String) : Flow<Jadwal>
+    @Query("SELECT * FROM jadwal WHERE idJadwal = :idJadwal")
+    fun getJadwal(idJadwal: String) : Flow<Jadwal>
 
-    //Delete Mahasiswa
+    @Query("""
+        SELECT Jadwal.idJadwal, Jadwal.namaDokter, jadwal.namaPasien,Jadwal.noHp,Jadwal.tglKonsul,Jadwal.status
+        FROM jadwal Jadwal
+        INNER JOIN dokter d ON Jadwal.namaDokter = d.idDokter
+        WHERE Jadwal.idJadwal = :idJadwal
+        ORDER BY Jadwal.namaPasien ASC
+    """)
+
+    fun getJadwalJoin(idJadwal: String): Flow<List<Jadwal>>
+
     @Delete
-    suspend fun deleteMahasiswa(mahasiswa: Jadwal)  //menghapus data mahasiswa tertentu dari database
+    suspend fun deleteJadwal(jadwal: Jadwal)
 
-    //Update Mahasiswa
     @Update
-    suspend fun updateMahasiswa(mahasiswa: Jadwal) //memperbarui informasi mahasiswa yang sudah ada di database
+    suspend fun updateJadwal(jadwal: Jadwal)
 
     @Insert
-    suspend fun InsertMahasiswa(mahasiswa: Jadwal)
+    suspend fun insertJadwal(jadwal: Jadwal)
 }
