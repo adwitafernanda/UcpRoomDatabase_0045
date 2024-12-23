@@ -10,10 +10,13 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface DokterDao {
 
-
-    @Query("SELECT * FROM dokter WHERE id = :id")
-    fun getDokter(id: String) : Flow<Dokter>
-
     @Insert
-    suspend fun InsertDokter(dokter: Dokter)
+    suspend fun insertDokter(dokter:Dokter)
+
+    //get dokter
+    @Query("SELECT * FROM dokter ORDER BY namaDokter ASC")
+    fun getAllDokter(): Flow<List<Dokter>>
+
+    @Query("SELECT * FROM dokter WHERE idDokter = :idDokter")
+    fun getDokter(idDokter: String) : Flow<Dokter>
 }
